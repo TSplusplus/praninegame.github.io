@@ -10,17 +10,27 @@
 	<body>
 		<script src="js/three.js"></script>
 		<script>
-			const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			const renderer = new THREE.WebGLRenderer();
+		let scene, camera, renderer, cube;
+		function init(){
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 			const texture = new THREE.TextureLoader().load('25150_1259550421445_1524242_n.jpg' );
 			const texture_2 = new THREE.TextureLoader().load('25150_1259550381444_608981_n.jpg' );
 			const texture_3 = new THREE.TextureLoader().load('550960_3565365905391_414459789_n.jpg' );
 			const geometry = new THREE.BoxGeometry(3,3,3);
-			const material = new THREE.MeshBasicMaterial( { map: texture } );
-			const cube = new THREE.Mesh( geometry, material );
+			//const material = new THREE.MeshBasicMaterial( { map: texture } );
+			const materials = [
+        		new THREE.MeshBasicMaterial({ map: texture }), //right side
+        		new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('25150_1259550501447_617021_n.jpg')}), //left side
+        		new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('25150_1259550541448_748885_n.jpg')}), //top side
+        		new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('25150_1259550581449_5267531_n.jpg')}), //bottom side
+        		new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('551768_3441469008046_811504531_n.jpg')}), //front side
+        		new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('25150_1259550741453_578720_n.jpg')}), //back side
+    		];
+			cube = new THREE.Mesh( geometry, materials );
 			scene.add( cube );
 			camera.position.z = 5;
 			const plane1geometry = new THREE.PlaneGeometry(  7, 5, 35 );
@@ -40,13 +50,22 @@
 			scene.add( gridHelper );
 			scene.add( plane2 );
 			scene.background = new THREE.TextureLoader().load('1.jpg');
-			function animate() {
-				requestAnimationFrame( animate );
-				cube.rotation.x += 0.01;
-				cube.rotation.y += 0.01;
-				renderer.render( scene, camera );
+		}
+		function animate() {
+			requestAnimationFrame( animate );
+			cube.rotation.x += 0.01;
+			cube.rotation.y += 0.01;
+			renderer.render( scene, camera );
 			}
-			animate();
+		function onWindowResize(){
+    		camera.aspect = window.innerWidth / window.innerHeight;
+    		camera.updateProjectionMatrix();
+    		renderer.setSize(window.innerWidth, window.innerHeight);
+		}
+
+		window.addEventListener('resize', onWindowResize, false);
+		init();
+		animate();
 		</script>
 	</body>
 </html>
